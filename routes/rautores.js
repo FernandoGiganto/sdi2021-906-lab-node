@@ -1,16 +1,30 @@
 module.exports = function (app,swig){
 
+    let autores = [ {
+        "nombre": "Dario",
+        "grupo": "Oracle",
+        "rol": "cantante"
+    },{
+        "nombre": "Manolin",
+        "grupo": "Camela",
+        "rol": "teclista"
+    },{
+        "nombre": "pepe",
+        "grupo": "pepe y los pepitos",
+        "rol": "teclista"
+    }];
+
     app.get('/autores/agregar', function (req, res) {
         let roles = [ {
-            "nombre": "Cantante",
+            "nombre": "cantante",
         }, {
-            "nombre": "Batería",
+            "nombre": "batería",
         },{
-            "nombre": "Guitarrista",
+            "nombre": "guitarrista",
         },{
-            "nombre": "Bajista",
+            "nombre": "bajista",
         },{
-            "nombre": "Teclista",
+            "nombre": "teclista",
         }];
         let respuesta = swig.renderFile('views/autores-agregar.html', {
             roles:roles
@@ -35,15 +49,7 @@ module.exports = function (app,swig){
     });
 
     app.get("/autores",function (req,res){
-        let autores = [ {
-            "nombre": "Dario",
-            "grupo": "Oracle",
-            "rol": "cantante"
-        },{
-            "nombre": "Manolin",
-            "grupo": "Camela",
-            "rol": "Teclista"
-        }];
+
 
         let respuesta = swig.renderFile('views/autores.html',{
             autores : autores
@@ -52,18 +58,15 @@ module.exports = function (app,swig){
         res.send(respuesta);
     });
 
-    app.get('/autores/:id', function(req, res) {
-        let respuesta = 'id: ' + req.params.id;
-        res.redirect("/autores");
+    app.get('/autores/filtrar/:rol',function (req,res){
+        let respuesta = swig.renderFile('views/autores.html', {
+            autores : autores.filter(autor => autor.rol === req.params.rol)
+        });
+        res.send(respuesta);
     });
 
-    app.get('/autores/:grupo', function(req, res) {
-        let respuesta = 'grupo: ' + req.params.id;
-        res.redirect("/autores");
-    });
+    app.get('/autores/*', function (req, res) {
+        res.redirect('/autores');
+    })
 
-    app.get('/autores/:grupo/:id', function(req, res) {
-        let respuesta = 'id: ' + req.params.id + '<br>' + 'grupo: ' + req.params.id;
-        res.redirect("/autores");
-    });
 };
