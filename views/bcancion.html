@@ -54,7 +54,14 @@
 
 	<h2>Comentarios sobre {{cancion.nombre}} :</h2>
 	{% for comentario in comentarios %}
-	<div class="small">{{ comentario.autor }} - {{ comentario.texto }} </div> <br>
+	<div class="small">{{ comentario.autor }} - {{ comentario.texto }}
+		<form class="form-horizontal" method="get" action="/comentario/borrar/{{comentario._id.toString()}}">
+
+                            <button class="btn" type="submit">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+
+		</form></div> <br>
 	{% endfor %}
 	<form class="form-horizontal" method="post" action="/comentarios/{{ cancion._id.toString() }}">
 		<div class="form-group">
