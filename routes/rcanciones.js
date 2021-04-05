@@ -28,16 +28,23 @@ module.exports = function(app,swig,gestorBD) {
     });
 
     app.get('/cancion/:id', function (req, res) {
-        let criterio = { "_id" : gestorBD.mongo.ObjectID(req.params.id) };
-        gestorBD.obtenerCanciones(criterio,function(canciones){
-            if ( canciones == null ){
-                res.send("Error al recuperar la canción.");
+        let criterioCacnion  = {"_id": gestorBD.mongo.ObjectID(req.params.id)};
+        let criterioComentarios= { "cancion_id" : gestorBD.mongo.ObjectID(req.params.id) };
+        gestorBD.obtenerCanciones(criterioCacnion, function (canciones) {
+            if (canciones == null) {
+                res.send("Eror en cancion");
             } else {
-                let respuesta = swig.renderFile('views/bcancion.html',
-                    {
-                        cancion : canciones[0]
+                gestorBD.obtenerComentarios(criterioComentarios, function(comentarios){
+                    if(comentarios == null){
+                        res.send("Error en comentarios");
+                    }
+                    let respuesta = swig.renderFile('views/bcancion.html',{
+                        cancion: canciones[0],
+                        comentarios: comentarios
+
                     });
-                res.send(respuesta);
+                    res.send(respuesta);
+                })
             }
         });
     });
